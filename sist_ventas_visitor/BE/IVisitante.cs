@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace BE
 {
-    public class Class1
+    public interface IVisitante
     {
+        void Visitar(Producto producto);
+        void Visitar(PaquetePromocional paquete);
+
     }
 }
