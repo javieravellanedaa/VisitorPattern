@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace sist_ventas_visitor.Properties
+namespace UI.Properties
 {
 
 

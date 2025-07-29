@@ -16,5 +16,6 @@ namespace BE
         {
             visitante.Visitar(this);
         }
+        public override string ToString() => Nombre;
     }
 }

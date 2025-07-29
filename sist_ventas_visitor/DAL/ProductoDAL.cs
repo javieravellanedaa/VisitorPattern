@@ -1,11 +1,9 @@
-﻿using BE;
+﻿// DAL/ProductoDAL.cs
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BE;
 
 namespace DAL
 {
@@ -22,14 +20,14 @@ namespace DAL
         {
             var lista = new List<Producto>();
             _acceso.Open();
-            var tabla = _acceso.Read("sp_producto_obtener_todos");
-            foreach (DataRow row in tabla.Rows)
+            var dt = _acceso.Read("sp_producto_obtener_todos");
+            foreach (DataRow r in dt.Rows)
             {
                 lista.Add(new Producto
                 {
-                    Id = Convert.ToInt32(row["Id"]),
-                    Nombre = row["Nombre"].ToString(),
-                    Precio = Convert.ToDecimal(row["Precio"])
+                    Id = Convert.ToInt32(r["Id"]),
+                    Nombre = r["Nombre"].ToString(),
+                    Precio = Convert.ToDecimal(r["Precio"])
                 });
             }
             _acceso.Close();
@@ -39,22 +37,17 @@ namespace DAL
         public Producto ObtenerPorId(int id)
         {
             _acceso.Open();
-            var pars = new List<SqlParameter>
-            {
-                _acceso.CreateParameter("@Id", id)
-            };
-            var tabla = _acceso.Read("sp_producto_obtener_por_id", pars);
+            var pars = new List<SqlParameter> { _acceso.CreateParameter("@Id", id) };
+            var dt = _acceso.Read("sp_producto_obtener_por_id", pars);
             _acceso.Close();
 
-            if (tabla.Rows.Count == 0)
-                return null;
-
-            var row = tabla.Rows[0];
+            if (dt.Rows.Count == 0) return null;
+            var r = dt.Rows[0];
             return new Producto
             {
                 Id = id,
-                Nombre = row["Nombre"].ToString(),
-                Precio = Convert.ToDecimal(row["Precio"])
+                Nombre = r["Nombre"].ToString(),
+                Precio = Convert.ToDecimal(r["Precio"])
             };
         }
 
@@ -64,7 +57,7 @@ namespace DAL
             var pars = new List<SqlParameter>
             {
                 _acceso.CreateParameter("@Nombre", producto.Nombre),
-                _acceso.CreateParameter("@Precio", producto.Precio) 
+                _acceso.CreateParameter("@Precio", producto.Precio)
             };
             var result = _acceso.WriteScalar("sp_producto_insertar", pars);
             _acceso.Close();
@@ -76,24 +69,20 @@ namespace DAL
             _acceso.Open();
             var pars = new List<SqlParameter>
             {
-                _acceso.CreateParameter("@Id", producto.Id),
+                _acceso.CreateParameter("@Id", producto.Id),    
                 _acceso.CreateParameter("@Nombre", producto.Nombre),
-                _acceso.CreateParameter("@Precio", producto.Precio) 
+                _acceso.CreateParameter("@Precio", producto.Precio)
             };
-            _acceso.Write("usp_Producto_Update", pars);
+            _acceso.Write("sp_producto_actualizar", pars);
             _acceso.Close();
         }
 
         public void Eliminar(int id)
         {
             _acceso.Open();
-            var pars = new List<SqlParameter>
-            {
-                _acceso.CreateParameter("@Id", id)
-            };
+            var pars = new List<SqlParameter> { _acceso.CreateParameter("@Id", id) };
             _acceso.Write("sp_producto_borrar", pars);
             _acceso.Close();
         }
     }
 }
-

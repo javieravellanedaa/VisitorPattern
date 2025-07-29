@@ -84,7 +84,7 @@ namespace DAL
             return retorno;
         }
 
-        #region Creación de parámetros
+       
 
         public SqlParameter CreateParameter(string nombre, string valor)
         {
@@ -130,6 +130,6 @@ namespace DAL
             return parametro;
         }
 
-        #endregion
+        
     }
 }
